@@ -1,0 +1,35 @@
+{
+  "name": "recursivetree/seat-transport",
+  "description": "Transportation quotes for hauling services",
+  "license": "MIT",
+  "type": "seat-plugin",
+  "authors": [
+    {
+      "name": "recursivetree",
+      "email": "recursivetreemail@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "RecursiveTree\\Seat\\TransportPlugin\\": "src/"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "php": "^7.3",
+    "laravel/framework": "^6.2",
+    "eveseat/web": "^4.15.0",
+    "eveseat/eveapi": "^4.0",
+    "eveseat/services": "^4.0",
+    "eveseat/notifications": "^4.0",
+    "recursivetree/seat-treelib": "^1.0.12"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "RecursiveTree\\Seat\\TransportPlugin\\TransportPluginServiceProvider"
+      ]
+    }
+  }
+}
