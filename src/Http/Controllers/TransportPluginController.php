@@ -3,6 +3,7 @@
 namespace RecursiveTree\Seat\TransportPlugin\Http\Controllers;
 
 use RecursiveTree\Seat\TransportPlugin\Models\TransportRoute;
+use RecursiveTree\Seat\TreeLib\Helpers\Parser;
 use Seat\Eveapi\Models\Universe\UniverseStation;
 use Seat\Eveapi\Models\Universe\UniverseStructure;
 use Seat\Web\Http\Controllers\Controller;
@@ -57,5 +58,32 @@ class TransportPluginController extends Controller
         $request->session()->flash("success","Successfully deleted route!");
 
         return redirect()->back();
+    }
+
+    public function calculate(){
+        $routes = TransportRoute::all();
+        return view("transportplugin::calculate", compact("routes"));
+    }
+
+    public function postCalculate(Request $request){
+        $request->validate([
+            "route"=>"required|integer",
+            "items"=>"required|string"
+        ]);
+
+        $route = TransportRoute::find($request->route);
+
+        $parsed_data = Parser::parseFitOrMultiBuy($request->items, false);
+        $volume = 0;
+        $collateral = 0;
+        foreach ($parsed_data->items->iterate() as $item){
+            $typeModel = $item->getTypeModel();
+            $volume += $typeModel->volume;
+            $collateral += $typeModel->basePrice;
+        }
+
+        $cost = $route->isk_per_m3 * $volume + $collateral * ($route->collateral_percentage/100.0);
+
+        return view("transportplugin::costs",compact("cost","route","collateral","volume"));
     }
 }

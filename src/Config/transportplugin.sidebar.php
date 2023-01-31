@@ -4,8 +4,14 @@ return [
         'name'          => 'Transport Calculator',
         'icon'          => 'fas fa-truck',
         'route_segment' => 'transportplugin',
-        'permission' => 'transportplugin.settings',
+        'permission' => 'transportplugin.calculate',
         'entries'       => [
+            [
+                'name'  => 'Calculate',
+                'icon'  => 'fas fa-calculator',
+                'route' => 'transportplugin.calculate',
+                'permission' => 'transportplugin.calculate',
+            ],
             [
                 'name'  => 'Settings',
                 'icon'  => 'fas fa-cogs',

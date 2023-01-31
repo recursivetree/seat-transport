@@ -22,4 +22,16 @@ Route::group([
         'uses' => 'TransportPluginController@deleteRoute',
         'middleware' => 'can:transportplugin.settings'
     ]);
+
+    Route::get('/calculate', [
+        'as'   => 'transportplugin.calculate',
+        'uses' => 'TransportPluginController@calculate',
+        'middleware' => 'can:transportplugin.calculate'
+    ]);
+
+    Route::post('/calculate', [
+        'as'   => 'transportplugin.submitCalculate',
+        'uses' => 'TransportPluginController@postCalculate',
+        'middleware' => 'can:transportplugin.calculate'
+    ]);
 });
