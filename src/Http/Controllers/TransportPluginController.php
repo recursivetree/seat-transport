@@ -3,7 +3,9 @@
 namespace RecursiveTree\Seat\TransportPlugin\Http\Controllers;
 
 use RecursiveTree\Seat\TransportPlugin\Models\TransportRoute;
+use RecursiveTree\Seat\TransportPlugin\Prices\SeatTransportPriceProviderSettings;
 use RecursiveTree\Seat\TreeLib\Helpers\Parser;
+use RecursiveTree\Seat\TreeLib\Prices\EvePraisalPriceProvider;
 use Seat\Eveapi\Models\Universe\UniverseStation;
 use Seat\Eveapi\Models\Universe\UniverseStructure;
 use Seat\Web\Http\Controllers\Controller;
@@ -75,11 +77,15 @@ class TransportPluginController extends Controller
 
         $parsed_data = Parser::parseFitOrMultiBuy($request->items, false);
         $volume = 0;
-        $collateral = 0;
         foreach ($parsed_data->items->iterate() as $item){
             $typeModel = $item->getTypeModel();
             $volume += $typeModel->volume;
-            $collateral += $typeModel->basePrice;
+        }
+
+        $collateral = 0;
+        $appraised_items = EvePraisalPriceProvider::getPrices($parsed_data->items,new SeatTransportPriceProviderSettings());
+        foreach ($appraised_items as $item){
+            $collateral += $item->getTotalPrice();
         }
 
         $cost = $route->isk_per_m3 * $volume + $collateral * ($route->collateral_percentage/100.0);
