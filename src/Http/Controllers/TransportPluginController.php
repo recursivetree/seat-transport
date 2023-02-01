@@ -2,6 +2,7 @@
 
 namespace RecursiveTree\Seat\TransportPlugin\Http\Controllers;
 
+use RecursiveTree\Seat\TransportPlugin\Models\InvVolume;
 use RecursiveTree\Seat\TransportPlugin\Models\TransportRoute;
 use RecursiveTree\Seat\TransportPlugin\Prices\SeatTransportPriceProviderSettings;
 use RecursiveTree\Seat\TreeLib\Helpers\Parser;
@@ -78,8 +79,9 @@ class TransportPluginController extends Controller
         $parsed_data = Parser::parseFitOrMultiBuy($request->items, false);
         $volume = 0;
         foreach ($parsed_data->items->iterate() as $item){
-            $typeModel = $item->getTypeModel();
-            $volume += $typeModel->volume;
+            $item_volume = InvVolume::find($item->getTypeId())->volume ?? $item->getTypeModel()->volume;
+
+            $volume += $item_volume * $item->getAmount();
         }
 
         $collateral = 0;
