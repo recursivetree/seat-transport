@@ -77,6 +77,13 @@ class TransportPluginController extends Controller
         $route = TransportRoute::find($request->route);
 
         $parsed_data = Parser::parseFitOrMultiBuy($request->items, false);
+        //no items found, try to apply the inventory parser
+        if ($parsed_data->items->count()==0){
+            $parsed_data = Parser::parseInventoryExpanded($request->items);
+            $request->session()->flash("warning","Seat used an experimental parser to read your items. Please check that the volume matches the ingame value and the collateral is reasonable!");
+        }
+
+
         $volume = 0;
         foreach ($parsed_data->items->iterate() as $item){
             $item_volume = InvVolume::find($item->getTypeId())->volume ?? $item->getTypeModel()->volume;
