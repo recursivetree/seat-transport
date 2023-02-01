@@ -11,7 +11,22 @@
                 Settings
             </h5>
             <div class="card-text my-3 mx-3">
+                <h6>General Settings</h6>
+
                 <form action="{{ route("transportplugin.saveSettings") }}" method="POST">
+                    @csrf
+                    <div class="form-group">
+                        <label for="info_text">Info Text</label>
+                        <textarea class="form-control" name="info_text" id="info_text" rows="5" placeholder="Write anything users might want to know when they see their estimate, for example how to submit the contract.">{{ $info_text }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+
+                <h6>Routes</h6>
+
+                <form action="{{ route("transportplugin.saveRouteSettings") }}" method="POST">
                     @csrf
                     <div class="form-row">
 

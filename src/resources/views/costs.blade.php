@@ -14,10 +14,12 @@
                 <dl>
                     <dt>Collateral</dt>
                     <dd>{{ number($collateral) }} ISK</dd>
-                    <dt>Volume</sup></dt>
+                    <dt>Volume</dt>
                     <dd>{{ number($volume) }} m<sup>3</sup></dd>
                     <dt>Reward</dt>
                     <dd>{{ number($cost) }} ISK</dd>
+                    <dt>Info</dt>
+                    <dd>{{ $info_text }}</dd>
                 </dl>
             </div>
         </div>

@@ -20,6 +20,8 @@ class TransportPluginServiceProvider extends AbstractSeatPlugin
         $this->mergeConfigFrom(__DIR__ . '/Config/transportplugin.sidebar.php','package.sidebar');
         $this->mergeConfigFrom(__DIR__ . '/Config/transportplugin.sde.tables.php','seat.sde.tables');
         $this->registerPermissions(__DIR__ . '/Config/transportplugin.permissions.php', 'transportplugin');
+
+        TransportPluginSettings::init();
     }
 
     public function getName(): string

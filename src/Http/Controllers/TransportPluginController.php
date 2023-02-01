@@ -5,6 +5,7 @@ namespace RecursiveTree\Seat\TransportPlugin\Http\Controllers;
 use RecursiveTree\Seat\TransportPlugin\Models\InvVolume;
 use RecursiveTree\Seat\TransportPlugin\Models\TransportRoute;
 use RecursiveTree\Seat\TransportPlugin\Prices\SeatTransportPriceProviderSettings;
+use RecursiveTree\Seat\TransportPlugin\TransportPluginSettings;
 use RecursiveTree\Seat\TreeLib\Helpers\Parser;
 use RecursiveTree\Seat\TreeLib\Prices\EvePraisalPriceProvider;
 use Seat\Eveapi\Models\Universe\UniverseStation;
@@ -21,10 +22,11 @@ class TransportPluginController extends Controller
         $stations = UniverseStation::all();
         $structures = UniverseStructure::all();
         $routes = TransportRoute::all();
-        return view("transportplugin::settings", compact("stations","structures","routes"));
+        $info_text = TransportPluginSettings::$INFO_TEXT->get("");
+        return view("transportplugin::settings", compact("stations","structures","routes","info_text"));
     }
 
-    public function saveSettings(Request $request){
+    public function saveRoute(Request $request){
         $request->validate([
             "source_location"=>"required|integer",
             "destination_location"=>"required|integer",
@@ -47,6 +49,18 @@ class TransportPluginController extends Controller
         $route->save();
 
         $request->session()->flash("success","Successfully added/updated route!");
+
+        return $this->settings();
+    }
+
+    public function saveSettings(Request $request){
+        $request->validate([
+            "info_text"=>"present|string|nullable"
+        ]);
+
+        TransportPluginSettings::$INFO_TEXT->set($request->info_text);
+
+        $request->session()->flash("success","Successfully updated settings!");
 
         return $this->settings();
     }
@@ -99,6 +113,8 @@ class TransportPluginController extends Controller
 
         $cost = $route->isk_per_m3 * $volume + $collateral * ($route->collateral_percentage/100.0);
 
-        return view("transportplugin::costs",compact("cost","route","collateral","volume"));
+        $info_text = TransportPluginSettings::$INFO_TEXT->get("Your administrator can put a text about how to create the contract here.");
+
+        return view("transportplugin::costs",compact("cost","route","collateral","volume","info_text"));
     }
 }
