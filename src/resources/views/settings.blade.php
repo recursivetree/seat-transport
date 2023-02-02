@@ -53,6 +53,11 @@
                             <label for="maxm3">Max m<sup>3</sup></label>
                             <input type="number" class="form-control" id="maxm3" name="maxm3" min="0" value="20">
                         </div>
+
+                        <div class="form-group col-md-2">
+                            <label for="rushmarkup">Rush Markup %</label>
+                            <input type="number" class="form-control" id="rushmarkup" name="rushmarkup" min="0" value="20">
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -79,6 +84,7 @@
                             <th>Reward Collateral %</th>
                             <th>Reward isk/m<sup>3</sup></th>
                             <th>Max Volume m<sup>3</sup></th>
+                            <th>Rush Markup %</th>
                             <th>Info Text</th>
                             <th>Actions</th>
                         </tr>
@@ -100,6 +106,9 @@
                                 </td>
                                 <td>
                                     {{ $route->maxvolume }}
+                                </td>
+                                <td>
+                                    {{ $route->rush_markup }}
                                 </td>
                                 <td>
                                     {{$route->info_text}}

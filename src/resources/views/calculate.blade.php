@@ -35,6 +35,11 @@
                                 rows="22"></textarea>
                     </div>
 
+                    <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="rush_contract" name="rush_contract">
+                        <label class="form-check-label" for="rush_contract">Rush Contract</label>
+                    </div>
+
                     <button type="submit" class="btn btn-success form-control">Calculate</button>
                 </form>
             </div>

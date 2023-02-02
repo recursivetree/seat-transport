@@ -32,7 +32,8 @@ class TransportPluginController extends Controller
             "collateral"=>"required|numeric",
             "iskm3"=>"required|numeric",
             "info_text"=>"present|string|nullable",
-            "maxm3"=>"present|integer|nullable"
+            "maxm3"=>"present|integer|nullable",
+            "rushmarkup"=>"present|numeric|nullable"
         ]);
 
         $route = TransportRoute::where("source_location_id",$request->source_location)
@@ -49,6 +50,7 @@ class TransportPluginController extends Controller
         $route->collateral_percentage = $request->collateral;
         $route->info_text = $request->info_text;
         $route->maxvolume = $request->maxm3;
+        $route->rush_markup = $request->rushmarkup;
         $route->save();
 
         $request->session()->flash("success","Successfully added/updated route!");
@@ -76,7 +78,8 @@ class TransportPluginController extends Controller
     public function postCalculate(Request $request){
         $request->validate([
             "route"=>"required|integer",
-            "items"=>"required|string"
+            "items"=>"required|string",
+            "rush_contract"=>"nullable"
         ]);
 
         $route = TransportRoute::find($request->route);
@@ -108,6 +111,14 @@ class TransportPluginController extends Controller
         }
 
         $cost = $route->isk_per_m3 * $volume + $collateral * ($route->collateral_percentage/100.0);
+
+        if($request->rush_contract){
+            if(!$route->rush_markup){
+                $request->session()->flash("error","Rush contracts are not available on this route");
+                return redirect()->back();
+            }
+            $cost = $cost * (1+$route->rush_markup/100);
+        }
 
         return view("transportplugin::costs",compact("cost","route","collateral","volume"));
     }
