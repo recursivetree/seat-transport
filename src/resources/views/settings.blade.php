@@ -48,6 +48,11 @@
                             <label for="iskm3">Reward isk/m<sup>3</sup></label>
                             <input type="number" class="form-control" id="iskm3" name="iskm3" required min="0" value="20">
                         </div>
+
+                        <div class="form-group col-md-2">
+                            <label for="maxm3">Max m<sup>3</sup></label>
+                            <input type="number" class="form-control" id="maxm3" name="maxm3" min="0" value="20">
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -65,6 +70,7 @@
                             <th>To</th>
                             <th>Reward Collateral %</th>
                             <th>Reward isk/m<sup>3</sup></th>
+                            <th>Max Volume m<sup>3</sup></th>
                             <th>Info Text</th>
                             <th>Actions</th>
                         </tr>
@@ -83,6 +89,9 @@
                                 </td>
                                 <td>
                                     {{ $route->isk_per_m3 }}
+                                </td>
+                                <td>
+                                    {{ $route->maxvolume }}
                                 </td>
                                 <td>
                                     {{$route->info_text}}
