@@ -31,7 +31,7 @@
                                 class="form-control"
                                 id="items"
                                 name="items"
-                                placeholder="{{"INGAME INVENTORX WINDOW: (copy paste in list view mode)\n1MN Civilian Afterburner	1	Propulsion Module			5 m3	288.88 ISK\nCivilian Gatling Railgun	5	Energy Weapon			5 m3\nCivilian Relic Analyzer		Data Miners			5 m3\n\nMULTIBUY:\nTristan 100\nOmen 100\nTritanium 30000\n\nFITTINGS:\n[Pacifier, 2022 Scanner]\n\nCo-Processor II\nCo-Processor II\n\nMultispectrum Shield Hardener II\nMultispectrum Shield Hardener II\n\nSmall Tractor Beam II\nSmall Tractor Beam II"}}"
+                                placeholder="{{"INGAME INVENTORY WINDOW: (copy paste in list view mode)\n1MN Civilian Afterburner	1	Propulsion Module			5 m3	288.88 ISK\nCivilian Gatling Railgun	5	Energy Weapon			5 m3\nCivilian Relic Analyzer		Data Miners			5 m3\n\nMULTIBUY:\nTristan 100\nOmen 100\nTritanium 30000\n\nFITTINGS:\n[Pacifier, 2022 Scanner]\n\nCo-Processor II\nCo-Processor II\n\nMultispectrum Shield Hardener II\nMultispectrum Shield Hardener II\n\nSmall Tractor Beam II\nSmall Tractor Beam II"}}"
                                 rows="22"></textarea>
                     </div>
 
