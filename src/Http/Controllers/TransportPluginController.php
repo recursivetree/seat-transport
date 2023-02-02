@@ -22,7 +22,7 @@ class TransportPluginController extends Controller
         $stations = UniverseStation::all();
         $structures = UniverseStructure::all();
         $routes = TransportRoute::all();
-        $info_text = TransportPluginSettings::$INFO_TEXT->get("");
+        $info_text = "";
         return view("transportplugin::settings", compact("stations","structures","routes","info_text"));
     }
 
@@ -31,7 +31,8 @@ class TransportPluginController extends Controller
             "source_location"=>"required|integer",
             "destination_location"=>"required|integer",
             "collateral"=>"required|numeric",
-            "iskm3"=>"required|numeric"
+            "iskm3"=>"required|numeric",
+            "info_text"=>"required|string|nullable"
         ]);
 
         $route = TransportRoute::where("source_location_id",$request->source_location)
@@ -46,21 +47,10 @@ class TransportPluginController extends Controller
         $route->destination_location_id = $request->destination_location;
         $route->isk_per_m3 = $request->iskm3;
         $route->collateral_percentage = $request->collateral;
+        $route->info_text = $request->info_text;
         $route->save();
 
         $request->session()->flash("success","Successfully added/updated route!");
-
-        return $this->settings();
-    }
-
-    public function saveSettings(Request $request){
-        $request->validate([
-            "info_text"=>"present|string|nullable"
-        ]);
-
-        TransportPluginSettings::$INFO_TEXT->set($request->info_text);
-
-        $request->session()->flash("success","Successfully updated settings!");
 
         return $this->settings();
     }
@@ -113,8 +103,6 @@ class TransportPluginController extends Controller
 
         $cost = $route->isk_per_m3 * $volume + $collateral * ($route->collateral_percentage/100.0);
 
-        $info_text = TransportPluginSettings::$INFO_TEXT->get("Your administrator can put a text about how to create the contract here.");
-
-        return view("transportplugin::costs",compact("cost","route","collateral","volume","info_text"));
+        return view("transportplugin::costs",compact("cost","route","collateral","volume"));
     }
 }

@@ -17,12 +17,6 @@ Route::group([
         'middleware' => 'can:transportplugin.settings'
     ]);
 
-    Route::post('/settings', [
-        'as'   => 'transportplugin.saveSettings',
-        'uses' => 'TransportPluginController@saveSettings',
-        'middleware' => 'can:transportplugin.settings'
-    ]);
-
     Route::post('/settings/deleteroute', [
         'as'   => 'transportplugin.deleteRoute',
         'uses' => 'TransportPluginController@deleteRoute',

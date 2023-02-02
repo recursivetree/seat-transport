@@ -19,7 +19,7 @@
                     <dt>Reward</dt>
                     <dd>{{ number($cost) }} ISK</dd>
                     <dt>Info</dt>
-                    <dd>{{ $info_text }}</dd>
+                    <dd>{{ $route->info_text ?? "Your administrator can put a text about how to create the contract here." }}</dd>
                 </dl>
             </div>
         </div>

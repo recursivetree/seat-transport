@@ -11,21 +11,6 @@
                 Settings
             </h5>
             <div class="card-text my-3 mx-3">
-                <h6>General Settings</h6>
-
-                <form action="{{ route("transportplugin.saveSettings") }}" method="POST">
-                    @csrf
-                    <div class="form-group">
-                        <label for="info_text">Info Text</label>
-                        <textarea class="form-control" name="info_text" id="info_text" rows="5" placeholder="Write anything users might want to know when they see their estimate, for example how to submit the contract.">{{ $info_text }}</textarea>
-                    </div>
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
-                </form>
-
-                <h6>Routes</h6>
-
                 <form action="{{ route("transportplugin.saveRouteSettings") }}" method="POST">
                     @csrf
                     <div class="form-row">
@@ -64,6 +49,12 @@
                             <input type="number" class="form-control" id="iskm3" name="iskm3" required min="0" value="20">
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <label for="info_text">Info Text</label>
+                        <textarea class="form-control" name="info_text" id="info_text" rows="5" placeholder="Write anything users might want to know when they see their estimate, for example how to submit the contract.">{{ $info_text }}</textarea>
+                    </div>
+
                     <button type="submit" class="btn btn-primary form-control">Add</button>
                 </form>
 
@@ -74,6 +65,7 @@
                             <th>To</th>
                             <th>Reward Collateral %</th>
                             <th>Reward isk/m<sup>3</sup></th>
+                            <th>Info Text</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -91,6 +83,9 @@
                                 </td>
                                 <td>
                                     {{ $route->isk_per_m3 }}
+                                </td>
+                                <td>
+                                    {{$route->info_text}}
                                 </td>
                                 <td>
                                     <form action="{{ route("transportplugin.deleteRoute") }}" method="POST">
