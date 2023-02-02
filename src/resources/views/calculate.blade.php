@@ -1,7 +1,7 @@
 @extends('web::layouts.grids.12')
 
-@section('title', "Settings")
-@section('page_header', "Settings")
+@section('title', "Transport Calculator")
+@section('page_header', "Transport Calculator")
 
 
 @section('full')

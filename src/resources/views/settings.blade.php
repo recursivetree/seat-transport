@@ -8,7 +8,7 @@
     <div class="card">
         <div class="card-body">
             <h5 class="card-header">
-                Settings
+                Add Route
             </h5>
             <div class="card-text my-3 mx-3">
                 <form action="{{ route("transportplugin.saveRouteSettings") }}" method="POST">
@@ -62,7 +62,15 @@
 
                     <button type="submit" class="btn btn-primary form-control">Add</button>
                 </form>
-
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-header">
+                Routes
+            </h5>
+            <div class="card-text my-3 mx-3">
                 <table class="table table-hover mt-4">
                     <thead>
                         <tr>

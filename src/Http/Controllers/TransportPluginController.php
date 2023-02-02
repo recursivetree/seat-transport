@@ -53,7 +53,7 @@ class TransportPluginController extends Controller
 
         $request->session()->flash("success","Successfully added/updated route!");
 
-        return $this->settings();
+        return redirect()->route("transportplugin.settings");
     }
 
     public function deleteRoute(Request $request){
