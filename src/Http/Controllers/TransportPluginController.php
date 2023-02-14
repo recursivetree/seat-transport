@@ -75,6 +75,13 @@ class TransportPluginController extends Controller
         return view("transportplugin::calculate", compact("routes"));
     }
 
+    const ILLEGAL_GROUPS = [
+        448,//cargo containers
+        12,//Secure Cargo Container
+        340,//Audit Log Secure Container
+        649//Freight Container
+    ];
+
     public function postCalculate(Request $request){
         $request->validate([
             "route"=>"required|integer",
@@ -91,10 +98,16 @@ class TransportPluginController extends Controller
             $request->session()->flash("warning","Seat used an experimental parser to read your items. Please check that the volume matches the ingame value and the collateral is reasonable!");
         }
 
-
         $volume = 0;
         foreach ($parsed_data->items->iterate() as $item){
-            $item_volume = InvVolume::find($item->getTypeId())->volume ?? $item->getTypeModel()->volume;
+            $type_model = $item->getTypeModel();
+
+            if(in_array($type_model->groupID,self::ILLEGAL_GROUPS)){
+                $request->session()->flash("error","You are not allowed to transport $type_model->typeName (s) in your contract!");
+                return redirect()->back();
+            }
+
+            $item_volume = InvVolume::find($item->getTypeId())->volume ?? $type_model->volume;
 
             $volume += $item_volume * $item->getAmount();
         }
