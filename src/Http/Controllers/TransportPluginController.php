@@ -109,7 +109,24 @@ class TransportPluginController extends Controller
                 return redirect()->back();
             }
 
-            $item_volume = InvVolume::find($item->getTypeId())->volume ?? $type_model->volume;
+            //steve's inv_volumes are wrong, bcs and bs is swapped
+            switch ($type_model->groupID){
+                // battleships
+                case 27:{
+                    $item_volume = 50000;
+                    break;
+                }
+                //combat bcs and attack bcs
+                case 1201:
+                case 419:{
+                    $item_volume = 15000;
+                    break;
+                }
+                //attack bcs
+                default: {
+                    $item_volume = InvVolume::find($item->getTypeId())->volume ?? $type_model->volume;
+                }
+            }
 
             $volume += $item_volume * $item->getAmount();
         }
