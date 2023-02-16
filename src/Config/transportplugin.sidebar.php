@@ -3,7 +3,7 @@ return [
     'transportplugin' => [
         'name'          => 'Transport Calculator',
         'icon'          => 'fas fa-truck',
-        'route_segment' => 'transportplugin',
+        'route_segment' => 'transport',
         'permission' => 'transportplugin.calculate',
         'entries'       => [
             [

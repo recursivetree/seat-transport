@@ -39,24 +39,29 @@
                             </select>
                         </div>
 
-                        <div class="form-group col-md-2">
+                        <div class="form-group col-md-1">
                             <label for="collateral">Reward Collateral %</label>
                             <input type="number" class="form-control" id="collateral" name="collateral" required min="0" value="10">
                         </div>
 
-                        <div class="form-group col-md-2">
+                        <div class="form-group col-md-1">
                             <label for="iskm3">Reward isk/m<sup>3</sup></label>
                             <input type="number" class="form-control" id="iskm3" name="iskm3" required min="0" value="20">
                         </div>
 
-                        <div class="form-group col-md-2">
+                        <div class="form-group col-md-1">
                             <label for="maxm3">Max m<sup>3</sup></label>
                             <input type="number" class="form-control" id="maxm3" name="maxm3" min="0" value="20">
                         </div>
 
-                        <div class="form-group col-md-2">
+                        <div class="form-group col-md-1">
                             <label for="rushmarkup">Rush Markup %</label>
                             <input type="number" class="form-control" id="rushmarkup" name="rushmarkup" min="0" value="20">
+                        </div>
+
+                        <div class="form-group col-md-1">
+                            <label for="baseprice">Base Price</label>
+                            <input type="number" class="form-control" id="baseprice" name="baseprice" min="0" value="0">
                         </div>
                     </div>
 
@@ -85,6 +90,7 @@
                             <th>Reward isk/m<sup>3</sup></th>
                             <th>Max Volume m<sup>3</sup></th>
                             <th>Rush Markup %</th>
+                            <th>Base Price</th>
                             <th>Info Text</th>
                             <th>Actions</th>
                         </tr>
@@ -99,7 +105,7 @@
                                     {{ $route->destination_location()->name }}
                                 </td>
                                 <td>
-                                    {{ $route->collateral_percentage }}%
+                                    {{ $route->collateral_percentage }}
                                 </td>
                                 <td>
                                     {{ $route->isk_per_m3 }}
@@ -109,6 +115,9 @@
                                 </td>
                                 <td>
                                     {{ $route->rush_markup }}
+                                </td>
+                                <td>
+                                    {{ number_metric($route->base_price) }}
                                 </td>
                                 <td>
                                     {{$route->info_text}}

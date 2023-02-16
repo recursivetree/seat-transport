@@ -33,7 +33,8 @@ class TransportPluginController extends Controller
             "iskm3"=>"required|numeric",
             "info_text"=>"present|string|nullable",
             "maxm3"=>"present|integer|nullable",
-            "rushmarkup"=>"present|numeric|nullable"
+            "rushmarkup"=>"present|numeric|nullable",
+            "baseprice"=>"required|integer"
         ]);
 
         $route = TransportRoute::where("source_location_id",$request->source_location)
@@ -51,6 +52,7 @@ class TransportPluginController extends Controller
         $route->info_text = $request->info_text;
         $route->maxvolume = $request->maxm3;
         $route->rush_markup = $request->rushmarkup;
+        $route->base_price = $request->baseprice;
         $route->save();
 
         $request->session()->flash("success","Successfully added/updated route!");
@@ -123,7 +125,7 @@ class TransportPluginController extends Controller
             $collateral += $item->getTotalPrice();
         }
 
-        $cost = $route->isk_per_m3 * $volume + $collateral * ($route->collateral_percentage/100.0);
+        $cost = $route->isk_per_m3 * $volume + $collateral * ($route->collateral_percentage/100.0) + $route->base_price;
 
         if($request->rush_contract){
             if(!$route->rush_markup){
