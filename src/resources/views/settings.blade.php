@@ -51,7 +51,7 @@
 
                         <div class="form-group col-md-1">
                             <label for="maxm3">Max m<sup>3</sup></label>
-                            <input type="number" class="form-control" id="maxm3" name="maxm3" min="0" value="20">
+                            <input type="number" class="form-control" id="maxm3" name="maxm3" min="0" value="360000">
                         </div>
 
                         <div class="form-group col-md-1">
