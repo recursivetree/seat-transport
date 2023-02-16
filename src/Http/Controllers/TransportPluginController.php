@@ -136,6 +136,11 @@ class TransportPluginController extends Controller
             return redirect()->back();
         }
 
+        if($parsed_data->items->count()<1){
+            $request->session()->flash("error","No items entered!");
+            return redirect()->back();
+        }
+
         $collateral = 0;
         $appraised_items = EvePraisalPriceProvider::getPrices($parsed_data->items,new SeatTransportPriceProviderSettings());
         foreach ($appraised_items as $item){
