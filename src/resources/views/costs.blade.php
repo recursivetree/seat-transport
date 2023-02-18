@@ -13,11 +13,11 @@
             <div class="card-text my-3 mx-3">
                 <dl>
                     <dt>Collateral</dt>
-                    <dd>{{ number($collateral) }} ISK</dd>
+                    <dd>{{ number($collateral,0) }} ISK</dd>
                     <dt>Volume</dt>
                     <dd>{{ number($volume) }} m<sup>3</sup></dd>
                     <dt>Reward</dt>
-                    <dd>{{ number($cost) }} ISK</dd>
+                    <dd>{{ number($cost, 0) }} ISK</dd>
                     <dt>Info</dt>
                     <dd>{{ $route->info_text ?? "Your administrator can put a text about how to create the contract here." }}</dd>
                 </dl>
