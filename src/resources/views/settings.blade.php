@@ -55,6 +55,11 @@
                         </div>
 
                         <div class="form-group col-md-1">
+                            <label for="maxcollateral">Max Collateral</label>
+                            <input type="number" class="form-control" id="maxcollateral" name="maxcollateral" min="0" value="">
+                        </div>
+
+                        <div class="form-group col-md-1">
                             <label for="rushmarkup">Rush Markup %</label>
                             <input type="number" class="form-control" id="rushmarkup" name="rushmarkup" min="0" value="20">
                         </div>
@@ -89,6 +94,7 @@
                             <th>Reward Collateral %</th>
                             <th>Reward isk/m<sup>3</sup></th>
                             <th>Max Volume m<sup>3</sup></th>
+                            <th>Max Collateral</th>
                             <th>Rush Markup %</th>
                             <th>Base Price</th>
                             <th>Info Text</th>
@@ -112,6 +118,9 @@
                                 </td>
                                 <td>
                                     {{ $route->maxvolume }}
+                                </td>
+                                <td>
+                                    {{ $route->max_collateral }}
                                 </td>
                                 <td>
                                     {{ $route->rush_markup }}

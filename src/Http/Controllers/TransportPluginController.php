@@ -34,7 +34,8 @@ class TransportPluginController extends Controller
             "info_text"=>"present|string|nullable",
             "maxm3"=>"present|integer|nullable",
             "rushmarkup"=>"present|numeric|nullable",
-            "baseprice"=>"required|integer"
+            "baseprice"=>"required|integer",
+            "maxcollateral"=>"present|integer|nullable"
         ]);
 
         $route = TransportRoute::where("source_location_id",$request->source_location)
@@ -53,6 +54,7 @@ class TransportPluginController extends Controller
         $route->maxvolume = $request->maxm3;
         $route->rush_markup = $request->rushmarkup;
         $route->base_price = $request->baseprice;
+        $route->max_collateral = $request->maxcollateral;
         $route->save();
 
         $request->session()->flash("success","Successfully added/updated route!");
@@ -155,6 +157,11 @@ class TransportPluginController extends Controller
         $appraised_items = EvePraisalPriceProvider::getPrices($parsed_data->items,new SeatTransportPriceProviderSettings());
         foreach ($appraised_items as $item){
             $collateral += $item->getTotalPrice();
+        }
+
+        if ($route->max_collateral && $collateral > $route->max_collateral){
+            $request->session()->flash("error","This route only allows a collateral up to $route->max_collateral ISK per contract. You tried to submit a contract with a collateral of $collateral ISK. Please consider splitting up your contract in multiple smaller contracts to get it transported.");
+            return redirect()->back();
         }
 
         $cost = $route->isk_per_m3 * $volume + $collateral * ($route->collateral_percentage/100.0) + $route->base_price;
