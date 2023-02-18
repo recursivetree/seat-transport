@@ -109,7 +109,9 @@ class TransportPluginController extends Controller
                 return redirect()->back();
             }
 
-            //steve's inv_volumes are wrong, bcs and bs is swapped
+            //steve's inv_volumes are wrong, bcs and bs is swapped, porpoise is wrong
+            $item_volume = null;
+
             switch ($type_model->groupID){
                 // battleships
                 case 27:{
@@ -122,10 +124,18 @@ class TransportPluginController extends Controller
                     $item_volume = 15000;
                     break;
                 }
-                //attack bcs
-                default: {
-                    $item_volume = InvVolume::find($item->getTypeId())->volume ?? $type_model->volume;
+            }
+
+            switch ($type_model->typeID){
+                // porpoise
+                case 42244:{
+                    $item_volume = 50000;
+                    break;
                 }
+            }
+
+            if($item_volume == null){
+                $item_volume = InvVolume::find($item->getTypeId())->volume ?? $type_model->volume;
             }
 
             $volume += $item_volume * $item->getAmount();
