@@ -98,6 +98,11 @@ class TransportPluginController extends Controller
         //parse copy paste area
         $parser_result = \RecursiveTree\Seat\TreeLib\Parser\Parser::parseItems($request->items);
 
+        if($parser_result == null || $parser_result->items->isEmpty()){
+            $request->session()->flash("error","You need to enter at least one item!");
+            return redirect()->back();
+        }
+
 
         $volume = 0;
         foreach ($parser_result->items as $item){
@@ -143,11 +148,6 @@ class TransportPluginController extends Controller
 
         if ($route->maxvolume && $volume > $route->maxvolume){
             $request->session()->flash("error","This route can only transport up to $route->maxvolume m3 per contract. You tried to submit a contract with a volume of $volume m3. Please consider splitting up your contract in multiple smaller contracts to get it transported.");
-            return redirect()->back();
-        }
-
-        if($parser_result->items->isEmpty()){
-            $request->session()->flash("error","No items entered!");
             return redirect()->back();
         }
 
