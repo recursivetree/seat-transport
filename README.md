@@ -6,4 +6,4 @@ See the instruction over at the [seat documentation](https://eveseat.github.io/d
 
 The package name is `recursivetree/seat-transport`.
 
-> please note that this plugin is still very early in development and might contain bugs and other problems.
+After the stack is back up, run `php artisan eve:update:sde --force`.
