@@ -107,7 +107,7 @@ class TransportPluginController extends Controller
         $volume = 0;
         foreach ($parser_result->items as $item){
 
-            if(in_array($item->typeModel->typeID,self::ILLEGAL_GROUPS)){
+            if(in_array($item->typeModel->groupID,self::ILLEGAL_GROUPS) && $item->is_named!==null && $item->is_named){
                 $name = $item->typeModel->typeName;
                 $request->session()->flash("error","You are not allowed to transport $name(s) in your contract!");
                 return redirect()->back();
