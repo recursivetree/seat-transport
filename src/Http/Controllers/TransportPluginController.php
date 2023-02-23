@@ -95,26 +95,23 @@ class TransportPluginController extends Controller
 
         $route = TransportRoute::find($request->route);
 
-        $parsed_data = Parser::parseFitOrMultiBuy($request->items, false);
-        //no items found, try to apply the inventory parser
-        if ($parsed_data->items->count()==0){
-            $parsed_data = Parser::parseInventoryExpanded($request->items);
-            $request->session()->flash("warning","Seat used an experimental parser to read your items. Please check that the volume matches the ingame value and the collateral is reasonable!");
-        }
+        //parse copy paste area
+        $parser_result = \RecursiveTree\Seat\TreeLib\Parser\Parser::parseItems($request->items);
+
 
         $volume = 0;
-        foreach ($parsed_data->items->iterate() as $item){
-            $type_model = $item->getTypeModel();
+        foreach ($parser_result->items as $item){
 
-            if(in_array($type_model->groupID,self::ILLEGAL_GROUPS)){
-                $request->session()->flash("error","You are not allowed to transport $type_model->typeName (s) in your contract!");
+            if(in_array($item->typeModel->typeID,self::ILLEGAL_GROUPS)){
+                $name = $item->typeModel->typeName;
+                $request->session()->flash("error","You are not allowed to transport $name(s) in your contract!");
                 return redirect()->back();
             }
 
             //steve's inv_volumes are wrong, bcs and bs is swapped, porpoise is wrong
             $item_volume = null;
 
-            switch ($type_model->groupID){
+            switch ($item->typeModel->groupID){
                 // battleships
                 case 27:{
                     $item_volume = 50000;
@@ -128,7 +125,7 @@ class TransportPluginController extends Controller
                 }
             }
 
-            switch ($type_model->typeID){
+            switch ($item->typeModel->typeID){
                 // porpoise
                 case 42244:{
                     $item_volume = 50000;
@@ -137,10 +134,11 @@ class TransportPluginController extends Controller
             }
 
             if($item_volume == null){
-                $item_volume = InvVolume::find($item->getTypeId())->volume ?? $type_model->volume;
+                //3 layers: specified volume, InvVolumes, typeModel volume
+                $item_volume = $item->volume ?? InvVolume::find($item->typeModel->typeID)->volume ?? $item->typeModel->volume;
             }
 
-            $volume += $item_volume * $item->getAmount();
+            $volume += $item_volume * $item->amount;
         }
 
         if ($route->maxvolume && $volume > $route->maxvolume){
@@ -148,15 +146,15 @@ class TransportPluginController extends Controller
             return redirect()->back();
         }
 
-        if($parsed_data->items->count()<1){
+        if($parser_result->items->isEmpty()){
             $request->session()->flash("error","No items entered!");
             return redirect()->back();
         }
 
         $collateral = 0;
-        $appraised_items = EvePraisalPriceProvider::getPrices($parsed_data->items,new SeatTransportPriceProviderSettings());
+        $appraised_items = EvePraisalPriceProvider::getPrices($parser_result->items,new SeatTransportPriceProviderSettings());
         foreach ($appraised_items as $item){
-            $collateral += $item->getTotalPrice();
+            $collateral += $item->price * $item->amount;
         }
 
         if ($route->max_collateral && $collateral > $route->max_collateral){
