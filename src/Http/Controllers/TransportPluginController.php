@@ -119,6 +119,10 @@ class TransportPluginController extends Controller
         //parse copy paste area
         $parser_result = \RecursiveTree\Seat\TreeLib\Parser\Parser::parseItems($request->items);
 
+        if($parser_result->warning){
+            $request->session()->flash("warning","There is something off with the items your entered. Please check if the data makes sense.");
+        }
+
         if($parser_result == null || $parser_result->items->isEmpty()){
             $request->session()->flash("error","You need to enter at least one item!");
             return redirect()->back();
