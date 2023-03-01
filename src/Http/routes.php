@@ -11,6 +11,12 @@ Route::group([
         'middleware' => 'can:transportplugin.settings'
     ]);
 
+    Route::post('/settings', [
+        'as'   => 'transportplugin.saveSettings',
+        'uses' => 'TransportPluginController@saveSettings',
+        'middleware' => 'can:transportplugin.settings'
+    ]);
+
     Route::post('/settings/routes', [
         'as'   => 'transportplugin.saveRouteSettings',
         'uses' => 'TransportPluginController@saveRoute',

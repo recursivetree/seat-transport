@@ -8,6 +8,28 @@
     <div class="card">
         <div class="card-body">
             <h5 class="card-header">
+                General Settings
+            </h5>
+            <div class="card-text my-3 mx-3">
+                <form action="{{ route("transportplugin.saveSettings") }}" method="POST">
+                    @csrf
+                    <div class="form-group">
+                        <label for="priceprovider">Price Provider</label>
+                        <select id="priceprovider" class="form-control" name="priceprovider">
+                            <option value="{{ $price_provider['class'] }}" selected>{{$price_provider['name']}}</option>
+                        </select>
+                        <small class="text-muted">The source of the prices used to calculate the collateral.</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-header">
                 Add Route
             </h5>
             <div class="card-text my-3 mx-3">
@@ -151,6 +173,12 @@
         $(document).ready( function () {
             $("#source_location").select2()
             $("#destination_location").select2()
+            $("#priceprovider").select2({
+                ajax:{
+                    url: "{{ route("treelib.priceProviderLookup") }}",
+                    dataType: "json"
+                }
+            })
             $('.data-table').DataTable();
         });
     </script>

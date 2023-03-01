@@ -5,7 +5,9 @@ namespace RecursiveTree\Seat\TransportPlugin\Http\Controllers;
 use RecursiveTree\Seat\TransportPlugin\Models\InvVolume;
 use RecursiveTree\Seat\TransportPlugin\Models\TransportRoute;
 use RecursiveTree\Seat\TransportPlugin\Prices\SeatTransportPriceProviderSettings;
+use RecursiveTree\Seat\TransportPlugin\TransportPluginSettings;
 use RecursiveTree\Seat\TreeLib\Helpers\Parser;
+use RecursiveTree\Seat\TreeLib\Prices\AbstractPriceProvider;
 use RecursiveTree\Seat\TreeLib\Prices\EvePraisalPriceProvider;
 use Seat\Eveapi\Models\Universe\UniverseStation;
 use Seat\Eveapi\Models\Universe\UniverseStructure;
@@ -22,7 +24,26 @@ class TransportPluginController extends Controller
         $structures = UniverseStructure::all();
         $routes = TransportRoute::all();
         $info_text = "";
-        return view("transportplugin::settings", compact("stations","structures","routes","info_text"));
+
+        $price_providers = config('treelib.priceproviders');
+        $price_provider = $price_providers[TransportPluginSettings::$PRICE_PROVIDER->get(EvePraisalPriceProvider::class)] ?? $price_providers[EvePraisalPriceProvider::class];
+        return view("transportplugin::settings", compact("stations","structures","routes","info_text","price_provider"));
+    }
+
+    public function saveSettings(Request $request){
+        $request->validate([
+            "priceprovider"=>"required|string",
+        ]);
+
+        if(!class_exists($request->priceprovider) || !is_subclass_of($request->priceprovider,AbstractPriceProvider::class)){
+            $request->session()->flash("error","This is not a price provider!");
+            return redirect()->back();
+        }
+
+        TransportPluginSettings::$PRICE_PROVIDER->set($request->priceprovider);
+
+        $request->session()->flash("success","Successfully updated settings!");
+        return redirect()->route("transportplugin.settings");
     }
 
     public function saveRoute(Request $request){
@@ -152,7 +173,7 @@ class TransportPluginController extends Controller
         }
 
         $collateral = 0;
-        $appraised_items = EvePraisalPriceProvider::getPrices($parser_result->items,new SeatTransportPriceProviderSettings());
+        $appraised_items = TransportPluginSettings::$PRICE_PROVIDER->get(EvePraisalPriceProvider::class)::getPrices($parser_result->items,new SeatTransportPriceProviderSettings());
         foreach ($appraised_items as $item){
             $collateral += $item->price * $item->amount;
         }
