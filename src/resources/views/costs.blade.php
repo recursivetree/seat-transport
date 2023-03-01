@@ -21,6 +21,8 @@
                     <dt>Info</dt>
                     <dd>{{ $route->info_text ?? "Your administrator can put a text about how to create the contract here." }}</dd>
                 </dl>
+
+                <a href="{{ route("transportplugin.calculate") }}" class="btn btn-secondary">Back</a>
             </div>
         </div>
     </div>
