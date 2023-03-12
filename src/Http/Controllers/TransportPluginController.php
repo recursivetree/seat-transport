@@ -134,6 +134,11 @@ class TransportPluginController extends Controller
 
         $route = TransportRoute::find($request->route);
 
+        if ($route===null) {
+            $request->session()->flash("error", "Route not found!");
+            return redirect()->route("transportplugin.calculate");
+        }
+
         //parse copy paste area
         $parser_result = \RecursiveTree\Seat\TreeLib\Parser\Parser::parseItems($request->items);
 
@@ -143,7 +148,7 @@ class TransportPluginController extends Controller
 
         if ($parser_result == null || $parser_result->items->isEmpty()) {
             $request->session()->flash("error", "You need to enter at least one item!");
-            return redirect()->back();
+            return redirect()->route("transportplugin.calculate",["route"=>$route->id]);
         }
 
 
@@ -153,7 +158,7 @@ class TransportPluginController extends Controller
             if (in_array($item->typeModel->groupID, self::ILLEGAL_GROUPS) && $item->is_named !== null && $item->is_named) {
                 $name = $item->typeModel->typeName;
                 $request->session()->flash("error", "You are not allowed to transport $name(s) in your contract!");
-                return redirect()->back();
+                return redirect()->route("transportplugin.calculate",["route"=>$route->id]);
             }
 
             //steve's inv_volumes are wrong, bcs and bs is swapped, porpoise is wrong
@@ -194,7 +199,7 @@ class TransportPluginController extends Controller
 
         if ($route->maxvolume && $volume > $route->maxvolume) {
             $request->session()->flash("error", "This route can only transport up to $route->maxvolume m3 per contract. You tried to submit a contract with a volume of $volume m3. Please consider splitting up your contract in multiple smaller contracts to get it transported.");
-            return redirect()->back();
+            return redirect()->route("transportplugin.calculate",["route"=>$route->id]);
         }
 
         $collateral = 0;
@@ -205,7 +210,7 @@ class TransportPluginController extends Controller
 
         if ($route->max_collateral && $collateral > $route->max_collateral) {
             $request->session()->flash("error", "This route only allows a collateral up to $route->max_collateral ISK per contract. You tried to submit a contract with a collateral of $collateral ISK. Please consider splitting up your contract in multiple smaller contracts to get it transported.");
-            return redirect()->back();
+            return redirect()->route("transportplugin.calculate",["route"=>$route->id]);
         }
 
         $cost = $route->isk_per_m3 * $volume + $collateral * ($route->collateral_percentage / 100.0) + $route->base_price;
@@ -213,7 +218,7 @@ class TransportPluginController extends Controller
         if ($request->rush_contract) {
             if (!$route->rush_markup) {
                 $request->session()->flash("error", "Rush contracts are not available on this route");
-                return redirect()->back();
+                return redirect()->route("transportplugin.calculate",["route"=>$route->id]);
             }
             $cost = $cost * (1 + $route->rush_markup / 100);
         }
