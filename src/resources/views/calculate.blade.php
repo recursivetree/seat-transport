@@ -17,11 +17,9 @@
                     <div class="form-group">
                         <label for="route">Route</label>
                         <select id="route" name="route" class="form-control">
-                            @foreach($routes as $route)
-                                <option value="{{$route->id}}">
-                                    {{ $route->source_location()->name }} ----------> {{ $route->destination_location()->name }}
-                                </option>
-                            @endforeach
+                            @if($selected_route)
+                                <option value="{{ $selected_route->id }}" selected>{{ $selected_route->source_location()->name }} ----------> {{ $selected_route->destination_location()->name }}</option>
+                            @endif
                         </select>
                     </div>
 

@@ -98,10 +98,23 @@ class TransportPluginController extends Controller
         return redirect()->back();
     }
 
-    public function calculate()
+    public function calculate(Request $request)
     {
-        $routes = TransportRoute::all();
-        return view("transportplugin::calculate", compact("routes"));
+        $request->validate([
+           "route"=>"nullable|integer"
+        ]);
+
+        $selected_route = null;
+
+        if($request->route){
+            $selected_route = TransportRoute::find($request->route);
+        }
+
+        if($selected_route === null){
+            $selected_route = TransportRoute::first();
+        }
+
+        return view("transportplugin::calculate", compact("selected_route"));
     }
 
     const ILLEGAL_GROUPS = [
