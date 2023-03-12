@@ -35,6 +35,12 @@ Route::group([
         'middleware' => 'can:transportplugin.calculate'
     ]);
 
+    Route::get('/route/suggestions', [
+        'as'   => 'transportplugin.routeSuggestions',
+        'uses' => 'TransportPluginController@routeSuggestions',
+        'middleware' => 'can:transportplugin.calculate'
+    ]);
+
     Route::post('/calculate', [
         'as'   => 'transportplugin.submitCalculate',
         'uses' => 'TransportPluginController@postCalculate',

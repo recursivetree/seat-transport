@@ -49,8 +49,12 @@
 @push("javascript")
     <script>
         $(document).ready( function () {
-            $("#source_location").select2()
-            $("#destination_location").select2()
+            $("#route").select2({
+                ajax: {
+                    url: "{{ route("transportplugin.routeSuggestions") }}",
+                    dataType: "json"
+                }
+            })
             $('.data-table').DataTable();
         });
     </script>
