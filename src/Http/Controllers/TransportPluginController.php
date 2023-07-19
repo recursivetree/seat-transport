@@ -8,7 +8,7 @@ use RecursiveTree\Seat\TransportPlugin\Prices\SeatTransportPriceProviderSettings
 use RecursiveTree\Seat\TransportPlugin\TransportPluginSettings;
 use RecursiveTree\Seat\TreeLib\Helpers\Parser;
 use RecursiveTree\Seat\TreeLib\Prices\AbstractPriceProvider;
-use RecursiveTree\Seat\TreeLib\Prices\EvePraisalPriceProvider;
+use RecursiveTree\Seat\TreeLib\Prices\PriceProvider;
 use Seat\Eveapi\Models\Universe\UniverseStation;
 use Seat\Eveapi\Models\Universe\UniverseStructure;
 use Seat\Web\Http\Controllers\Controller;
@@ -26,7 +26,7 @@ class TransportPluginController extends Controller
         $info_text = "";
 
         $price_providers = config('treelib.priceproviders');
-        $price_provider = $price_providers[TransportPluginSettings::$PRICE_PROVIDER->get(EvePraisalPriceProvider::class)] ?? $price_providers[EvePraisalPriceProvider::class];
+        $price_provider = $price_providers[TransportPluginSettings::$PRICE_PROVIDER->get(PriceProvider::DEFAULT_PRICE_PROVIDER)] ?? $price_providers[PriceProvider::DEFAULT_PRICE_PROVIDER];
         return view("transportplugin::settings", compact("stations", "structures", "routes", "info_text", "price_provider"));
     }
 
@@ -203,7 +203,7 @@ class TransportPluginController extends Controller
         }
 
         $collateral = 0;
-        $appraised_items = TransportPluginSettings::$PRICE_PROVIDER->get(EvePraisalPriceProvider::class)::getPrices($parser_result->items, new SeatTransportPriceProviderSettings());
+        $appraised_items = TransportPluginSettings::$PRICE_PROVIDER->get(PriceProvider::DEFAULT_PRICE_PROVIDER)::getPrices($parser_result->items, new SeatTransportPriceProviderSettings());
         foreach ($appraised_items as $item) {
             $collateral += $item->price * $item->amount;
         }
