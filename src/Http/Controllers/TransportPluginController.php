@@ -7,16 +7,13 @@ use RecursiveTree\Seat\PricesCore\Models\PriceProviderInstance;
 use RecursiveTree\Seat\TransportPlugin\Item\PriceableEveItem;
 use RecursiveTree\Seat\TransportPlugin\Models\InvVolume;
 use RecursiveTree\Seat\TransportPlugin\Models\TransportRoute;
-use RecursiveTree\Seat\TransportPlugin\Prices\SeatTransportPriceProviderSettings;
 use RecursiveTree\Seat\TransportPlugin\TransportPluginSettings;
 use RecursiveTree\Seat\TreeLib\Helpers\Parser;
-use RecursiveTree\Seat\TreeLib\Prices\AbstractPriceProvider;
 use RecursiveTree\Seat\TreeLib\Prices\EvePraisalPriceProvider;
 use Seat\Eveapi\Models\Universe\UniverseStation;
 use Seat\Eveapi\Models\Universe\UniverseStructure;
 use Seat\Web\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 
 class TransportPluginController extends Controller
