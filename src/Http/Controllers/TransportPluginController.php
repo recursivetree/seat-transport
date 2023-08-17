@@ -2,6 +2,9 @@
 
 namespace RecursiveTree\Seat\TransportPlugin\Http\Controllers;
 
+use RecursiveTree\Seat\PricesCore\Exceptions\PriceProviderException;
+use RecursiveTree\Seat\PricesCore\Models\PriceProviderInstance;
+use RecursiveTree\Seat\TransportPlugin\Item\PriceableEveItem;
 use RecursiveTree\Seat\TransportPlugin\Models\InvVolume;
 use RecursiveTree\Seat\TransportPlugin\Models\TransportRoute;
 use RecursiveTree\Seat\TransportPlugin\Prices\SeatTransportPriceProviderSettings;
@@ -25,23 +28,22 @@ class TransportPluginController extends Controller
         $routes = TransportRoute::all();
         $info_text = "";
 
-        $price_providers = config('treelib.priceproviders');
-        $price_provider = $price_providers[TransportPluginSettings::$PRICE_PROVIDER->get(EvePraisalPriceProvider::class)] ?? $price_providers[EvePraisalPriceProvider::class];
+        $price_provider = TransportPluginSettings::$PRICE_PROVIDER_INSTANCE_ID->get(EvePraisalPriceProvider::class);
         return view("transportplugin::settings", compact("stations", "structures", "routes", "info_text", "price_provider"));
     }
 
     public function saveSettings(Request $request)
     {
         $request->validate([
-            "priceprovider" => "required|string",
+            "priceprovider" => "required|integer",
         ]);
 
-        if (!class_exists($request->priceprovider) || !is_subclass_of($request->priceprovider, AbstractPriceProvider::class)) {
+        if (PriceProviderInstance::find($request->priceprovider) === null) {
             $request->session()->flash("error", "This is not a price provider!");
             return redirect()->back();
         }
 
-        TransportPluginSettings::$PRICE_PROVIDER->set($request->priceprovider);
+        TransportPluginSettings::$PRICE_PROVIDER_INSTANCE_ID->set((int)$request->priceprovider);
 
         $request->session()->flash("success", "Successfully updated settings!");
         return redirect()->route("transportplugin.settings");
@@ -140,7 +142,7 @@ class TransportPluginController extends Controller
         }
 
         //parse copy paste area
-        $parser_result = \RecursiveTree\Seat\TreeLib\Parser\Parser::parseItems($request->items);
+        $parser_result = \RecursiveTree\Seat\TreeLib\Parser\Parser::parseItems($request->items, PriceableEveItem::class);
 
         if ($parser_result->warning) {
             $request->session()->flash("warning", "There is something off with the items your entered. Please check if the data makes sense.");
@@ -202,10 +204,21 @@ class TransportPluginController extends Controller
             return redirect()->route("transportplugin.calculate",["route"=>$route->id]);
         }
 
+        $price_provider = PriceProviderInstance::find(TransportPluginSettings::$PRICE_PROVIDER_INSTANCE_ID->get(null));
+        if($price_provider === null) {
+            return redirect()->route("transportplugin.calculate",["route"=>$route->id])->with("error", "The price provider couldn't be found. Please contact an administrator to fix this.");
+        }
+
+        try {
+            $price_provider->getPrices($parser_result->items);
+        } catch (PriceProviderException $e) {
+            $message = $e->getMessage();
+            return redirect()->route("transportplugin.calculate",["route"=>$route->id])->with("error", "Failed to get prices from price provider: $message");
+        }
+
         $collateral = 0;
-        $appraised_items = TransportPluginSettings::$PRICE_PROVIDER->get(EvePraisalPriceProvider::class)::getPrices($parser_result->items, new SeatTransportPriceProviderSettings());
-        foreach ($appraised_items as $item) {
-            $collateral += $item->price * $item->amount;
+        foreach ($parser_result->items as $item) {
+            $collateral += $item->price;
         }
 
         if ($route->max_collateral && $collateral > $route->max_collateral) {

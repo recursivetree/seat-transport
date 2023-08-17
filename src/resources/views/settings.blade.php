@@ -15,9 +15,9 @@
                     @csrf
                     <div class="form-group">
                         <label for="priceprovider">Price Provider</label>
-                        <select id="priceprovider" class="form-control" name="priceprovider">
-                            <option value="{{ $price_provider['class'] }}" selected>{{$price_provider['name']}}</option>
-                        </select>
+
+                        @include("pricescore::utils.instance_selector",["id"=>"priceprovider","name"=>"priceprovider","instance_id"=>$price_provider])
+
                         <small class="text-muted">The source of the prices used to calculate the collateral.</small>
                     </div>
 
@@ -173,12 +173,6 @@
         $(document).ready( function () {
             $("#source_location").select2()
             $("#destination_location").select2()
-            $("#priceprovider").select2({
-                ajax:{
-                    url: "{{ route("treelib.priceProviderLookup") }}",
-                    dataType: "json"
-                }
-            })
             $('.data-table').DataTable();
         });
     </script>
