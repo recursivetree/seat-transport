@@ -3,7 +3,7 @@
 namespace RecursiveTree\Seat\TransportPlugin\Http\Controllers;
 
 use RecursiveTree\Seat\PricesCore\Exceptions\PriceProviderException;
-use RecursiveTree\Seat\PricesCore\Models\PriceProviderInstance;
+use RecursiveTree\Seat\PricesCore\Facades\PriceProviderSystem;
 use RecursiveTree\Seat\TransportPlugin\Item\PriceableEveItem;
 use RecursiveTree\Seat\TransportPlugin\Models\InvVolume;
 use RecursiveTree\Seat\TransportPlugin\Models\TransportRoute;
@@ -35,10 +35,11 @@ class TransportPluginController extends Controller
             "priceprovider" => "required|integer",
         ]);
 
-        if (PriceProviderInstance::find($request->priceprovider) === null) {
-            $request->session()->flash("error", "This is not a price provider!");
-            return redirect()->back();
-        }
+        //TODO check for instance existance
+//        if (PriceProviderInstance::find($request->priceprovider) === null) {
+//            $request->session()->flash("error", "This is not a price provider!");
+//            return redirect()->back();
+//        }
 
         TransportPluginSettings::$PRICE_PROVIDER_INSTANCE_ID->set((int)$request->priceprovider);
 
@@ -201,13 +202,9 @@ class TransportPluginController extends Controller
             return redirect()->route("transportplugin.calculate",["route"=>$route->id]);
         }
 
-        $price_provider = PriceProviderInstance::find(TransportPluginSettings::$PRICE_PROVIDER_INSTANCE_ID->get(null));
-        if($price_provider === null) {
-            return redirect()->route("transportplugin.calculate",["route"=>$route->id])->with("error", "The price provider couldn't be found. Please contact an administrator to fix this.");
-        }
 
         try {
-            $price_provider->getPrices($parser_result->items);
+            PriceProviderSystem::getPrices(TransportPluginSettings::$PRICE_PROVIDER_INSTANCE_ID->get(null),$parser_result->items);
         } catch (PriceProviderException $e) {
             $message = $e->getMessage();
             return redirect()->route("transportplugin.calculate",["route"=>$route->id])->with("error", "Failed to get prices from price provider: $message");
