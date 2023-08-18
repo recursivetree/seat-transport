@@ -2,14 +2,14 @@
 
 namespace RecursiveTree\Seat\TransportPlugin\Item;
 
-use RecursiveTree\Seat\PricesCore\Contracts\Priceable;
+use RecursiveTree\Seat\PricesCore\Contracts\IPriceable;
 use RecursiveTree\Seat\TreeLib\Items\EveItem;
 
 /**
  * @property int $amount
  * @property float $price
  */
-class PriceableEveItem extends EveItem implements Priceable
+class PriceableEveItem extends EveItem implements IPriceable
 {
 
     public function getTypeID(): int
