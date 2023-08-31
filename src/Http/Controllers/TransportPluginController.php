@@ -9,7 +9,6 @@ use RecursiveTree\Seat\TransportPlugin\Models\InvVolume;
 use RecursiveTree\Seat\TransportPlugin\Models\TransportRoute;
 use RecursiveTree\Seat\TransportPlugin\TransportPluginSettings;
 use RecursiveTree\Seat\TreeLib\Helpers\Parser;
-use RecursiveTree\Seat\TreeLib\Prices\EvePraisalPriceProvider;
 use Seat\Eveapi\Models\Universe\UniverseStation;
 use Seat\Eveapi\Models\Universe\UniverseStructure;
 use Seat\Web\Http\Controllers\Controller;
@@ -25,7 +24,7 @@ class TransportPluginController extends Controller
         $routes = TransportRoute::all();
         $info_text = "";
 
-        $price_provider = TransportPluginSettings::$PRICE_PROVIDER_INSTANCE_ID->get(EvePraisalPriceProvider::class);
+        $price_provider = TransportPluginSettings::$PRICE_PROVIDER_INSTANCE_ID->get();
         return view("transportplugin::settings", compact("stations", "structures", "routes", "info_text", "price_provider"));
     }
 
