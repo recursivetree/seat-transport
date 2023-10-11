@@ -18,7 +18,7 @@
 
                         @include("pricescore::utils.instance_selector",["id"=>"priceprovider","name"=>"priceprovider","instance_id"=>$price_provider])
 
-                        <small class="text-muted">The source of the prices used to calculate the collateral.</small>
+                        <small class="text-muted">The source of the prices used to calculate the collateral. Manage price providers in the <a href="{{route('pricescore::settings')}}">price provider settings</a>.</small>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Save</button>
