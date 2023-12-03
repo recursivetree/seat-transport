@@ -2,8 +2,9 @@
 
 namespace RecursiveTree\Seat\TransportPlugin\Item;
 
-use RecursiveTree\Seat\PricesCore\Contracts\IPriceable;
+
 use RecursiveTree\Seat\TreeLib\Items\EveItem;
+use Seat\Services\Contracts\IPriceable;
 
 /**
  * @property int $amount
