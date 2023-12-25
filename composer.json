@@ -23,7 +23,7 @@
     "eveseat/eveapi": "^5.0",
     "eveseat/services": "^5.0.1",
     "eveseat/notifications": "^5.0",
-    "recursivetree/seat-treelib": "^5.0.x-dev",
+    "recursivetree/seat-treelib": "^5.0",
     "recursivetree/seat-prices-core": "dev-master"
   },
   "extra": {
