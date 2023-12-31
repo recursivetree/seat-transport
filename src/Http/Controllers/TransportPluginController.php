@@ -103,6 +103,11 @@ class TransportPluginController extends Controller
            "route"=>"nullable|integer"
         ]);
 
+        $price_provider = TransportPluginSettings::$PRICE_PROVIDER_INSTANCE_ID->get(null);
+        if($price_provider === null) {
+            return view("transportplugin::error");
+        }
+
         $selected_route = null;
 
         if($request->route){
